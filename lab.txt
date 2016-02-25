@@ -1,0 +1,81 @@
+створення таблиць
+
+create table reg (id_r int, name_r varchar(80));
+create table obl (id_o int, id_r int, name_o varchar(80));
+create table rod (id_rod int, id_o int, name_r varchar(80), place varchar(80), id_t int, id_roz int, id_roz_gaz int, data date, data_exp date);
+create table type_r (id_t int, name_t varchar(80));
+create table roz (id_roz int, name_roz varchar(80));
+
+добавляєм первинні ключі
+
+alter table reg add primary key(id_r);
+ALTER TABLE obl ADD PRIMARY KEY (id_o);
+ALTER TABLE rod ADD PRIMARY KEY (id_rod);
+ALTER TABLE type_r ADD PRIMARY KEY (id_t);
+ALTER TABLE roz ADD PRIMARY KEY (id_roz);
+
+
+
+вторинні ключі
+ALTER TABLE obl ADD CONSTRAINT cs_obl FOREIGN KEY (id_r) REFERENCES reg(id_r);
+ALTER TABLE rod ADD CONSTRAINT cs_type FOREIGN KEY (id_t) REFERENCES type_r (id_t);
+ALTER TABLE rod ADD CONSTRAINT cs_rod FOREIGN KEY (id_o) REFERENCES obl(id_o); 
+ALTER TABLE rod ADD CONSTRAINT cs_roz FOREIGN KEY (id_roz) REFERENCES roz (id_roz); 
+
+
+
+заповнюєм таблиці
+INSERT INTO reg (id_r, name_r) VALUES (1, 'Передкарпатська нафтогазоносна область');
+INSERT INTO reg (id_r, name_r) VALUES (2, 'Днiпровсько-Донецька нафто-газоносна область');
+INSERT INTO reg (id_r, name_r) VALUES (3, 'Причорноморсько-Кримська газона-фтоносна впадина');
+
+
+INSERT INTO obl (id_o, id_r, name_o) VALUES (1, 1, 'Чернівецька');
+INSERT INTO obl (id_o, id_r, name_o) VALUES (2, 1, 'Iвано-Франкiвська');
+INSERT INTO obl (id_o, id_r, name_o) VALUES (3, 1, 'Закарпатська');
+INSERT INTO obl (id_o, id_r, name_o) VALUES (4, 2, 'Полтавська');
+INSERT INTO obl (id_o, id_r, name_o) VALUES (5, 2, 'Сумська');
+INSERT INTO obl (id_o, id_r, name_o) VALUES (6, 3, 'Одеська');
+
+INSERT INTO type_r (id_t,  name_t) VALUES (1, 'Нафто-газове');
+INSERT INTO type_r (id_t,  name_t) VALUES (2, 'Газове');
+INSERT INTO type_r (id_t,  name_t) VALUES (3, 'Нафто-газоко-нден-сатне');
+INSERT INTO type_r (id_t,  name_t) VALUES (4, 'Газо-кон-денсатне');
+
+INSERT INTO roz (id_roz,  name_roz) VALUES (1, 'Дрібне');
+INSERT INTO roz (id_roz,  name_roz) VALUES (2, 'Се-реднє');
+INSERT INTO roz (id_roz,  name_roz) VALUES (3, 'Велике');
+INSERT INTO roz (id_roz,  name_roz) VALUES (4, '-');
+
+
+INSERT INTO rod (id_rod, id_o, name_r, place, id_t, id_roz, id_roz_gaz, data, data_exp )
+ VALUES (1, 1, 'Бiлиць-ке-Г','ст. Бiлиця', 1,2,1, '1949-01-01','1949-01-01');
+INSERT INTO rod (id_rod, id_o, name_r, place, id_t, id_roz, id_roz_gaz, data, data_exp )
+ VALUES (2, 2, 'Бого-родчан-ське-Г','28 км на ПдС вiд м.  Iвано-Фpанкiвськ', 2,4,1, '1949-01-01','1949-01-01');
+
+
+
+
+ALTER TABLE obl DROP CONSTRAINT cs_obl;
+INSERT INTO rod (id_rod, id_o, name_r, place, id_t, id_roz, id_roz, data, data_exp )
+ VALUES (1, 1, 'Бiлиць-ке-Г','ст. Бiлиця', 1,2,1, '1949-01-01','1949-01-01');
+INSERT INTO rod (id_rod, id_o, name_r, place, id_t, id_roz, id_roz, data, data_exp )
+ VALUES (2, 2, 'Бого-родчан-ське-Г','28 км на ПдС вiд м.  Iвано-Фpанкiвськ', 2,2, '1949-01-01','1949-01-01');
+
+
+ALTER TABLE rod ADD COLUMN data_exp date;
+
+
+
+
+lab 3
+
+SELECT reg.name_r, obl.name_o, rod.name_r, rod.place, type_r.name_t, rod.data, rod.data_exp  FROM reg INNER JOIN obl
+ON reg.id_r=obl.id_r
+INNER JOIN rod
+ON rod.id_o=obl.id_o
+INNER JOIN type_r
+ON type_r.id_t= rod.id_t
+INNER JOIN roz
+ON roz.id_roz=rod.id_roz
+;
